@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 
 /// Light mode color palette for GYMBRO app
 /// Based on the GYMBRO Theme Properties Specification
+///
+/// Usage Guidelines:
+/// - For theme-aware colors (adapt to light/dark mode), use ThemeExtensions:
+///   ```dart
+///   color: theme.cardSurface  // Automatically adapts to light/dark
+///   ```
+/// - For static colors that don't change with theme:
+///   ```dart
+///   color: AppColors.primary500  // Always blue
+///   ```
+/// - For brand-specific colors (logos, external brands):
+///   ```dart
+///   color: AppBrandColors.starYellow  // Rating stars
+///   ```
 class AppColors {
   AppColors._();
 
@@ -12,9 +26,9 @@ class AppColors {
   static const Color primary100 = Color(0xFFE6F0FF);
   static const Color primary300 = Color(0xFF66A3FF);
   static const Color primary400 = Color(0xFF3384FF);
-  static const Color primary500 = Color(0xFF0066FF); // Main brand color
-  static const Color primary600 = Color(0xFF0052CC); // Hover states
-  static const Color primary700 = Color(0xFF003D99); // Active states
+  static const Color primary500 = Color(0xFF0D7FF2); // Main brand color
+  static const Color primary600 = Color(0xFF0B6BCB); // Hover states
+  static const Color primary700 = Color(0xFF0952A5); // Active states
 
   // ============================================
   // SECONDARY COLORS - Fitness Orange
@@ -118,7 +132,7 @@ class DarkAppColors {
   static const Color primary400 = Color(0xFF4D94FF);
   static const Color primary500 = Color(0xFF66A3FF); // Lighter for dark mode
   static const Color primary600 = Color(0xFF3384FF);
-  static const Color primary700 = Color(0xFF0066FF);
+  static const Color primary700 = Color(0xFF0D7FF2);
 
   // ============================================
   // SECONDARY COLORS - Fitness Orange (adjusted for dark)
@@ -212,6 +226,42 @@ class DarkAppColors {
   static const Color borderLight = Color(0xFF4B5563);
 }
 
+/// Brand-specific colors that remain constant across themes
+/// Use these for logos, ratings, and external brand elements
+class AppBrandColors {
+  AppBrandColors._();
+
+  // ============================================
+  // RATING COLORS
+  // ============================================
+  /// Star rating color (used in gym cards)
+  static const Color starYellow = Color(0xFFFBBF24);
+
+  // ============================================
+  // GOOGLE LOGO COLORS
+  // ============================================
+  /// Google blue (used in social login button logo)
+  static const Color googleBlue = Color(0xFF4285F4);
+
+  /// Google green (used in social login button logo)
+  static const Color googleGreen = Color(0xFF34A853);
+
+  /// Google yellow (used in social login button logo)
+  static const Color googleYellow = Color(0xFFFBBC05);
+
+  /// Google red (used in social login button logo)
+  static const Color googleRed = Color(0xFFEA4335);
+
+  // ============================================
+  // PAYMENT CARD BRAND COLORS
+  // ============================================
+  /// Mastercard dark background
+  static const Color mastercardDark = Color(0xFF333333);
+
+  /// American Express blue
+  static const Color amexBlue = Color(0xFF007cc3);
+}
+
 /// Gradient definitions for GYMBRO app
 class AppGradients {
   AppGradients._();
@@ -221,8 +271,8 @@ class AppGradients {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFF0066FF),
-      Color(0xFF0052CC),
+      Color(0xFF0D7FF2),
+      Color(0xFF0B6BCB),
     ],
   );
 
@@ -242,7 +292,7 @@ class AppGradients {
     end: Alignment.bottomRight,
     colors: [
       Color(0xFFFF6B35),
-      Color(0xFF0066FF),
+      Color(0xFF0D7FF2),
     ],
   );
 }
