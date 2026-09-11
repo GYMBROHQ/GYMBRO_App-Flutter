@@ -37,7 +37,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
     final isDark = theme.brightness == Brightness.dark;
 
     final checkoutState = ref.watch(checkoutProvider);
-    print('🔴 [PaymentCheckoutPage] Checkout state: ${checkoutState.runtimeType}');
+    debugPrint('🔴 [PaymentCheckoutPage] Checkout state: ${checkoutState.runtimeType}');
     final paymentMethodsAsync = ref.watch(paymentMethodsProvider);
 
     return Scaffold(
@@ -641,7 +641,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
 
         final checkoutState = ref.read(checkoutProvider);
         checkoutState.when(
-          planSelected: (plan, gymId, gymName, _, __) {
+          planSelected: (plan, gymId, gymName, _, _) {
             ref.read(checkoutProvider.notifier).selectPlan(
               plan: plan,
               gymId: gymId,
@@ -650,7 +650,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
             // TODO: Replace with actual API validation when backend supports it
             // await ref.read(checkoutProvider.notifier).applyPromoCode(subscriptionId, code);
           },
-          paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, __) {
+          paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, _) {
             ref.read(checkoutProvider.notifier).selectPlan(
               plan: plan,
               gymId: gymId,
@@ -658,7 +658,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
             );
             ref.read(checkoutProvider.notifier).selectPaymentMethod(paymentMethod);
           },
-          cashPaymentSelected: (plan, gymId, gymName, _, __) {
+          cashPaymentSelected: (plan, gymId, gymName, _, _) {
             ref.read(checkoutProvider.notifier).selectPlan(
               plan: plan,
               gymId: gymId,
@@ -678,14 +678,14 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
         // Remove promo code from checkout state
         final checkoutState = ref.read(checkoutProvider);
         checkoutState.when(
-          planSelected: (plan, gymId, gymName, _, __) {
+          planSelected: (plan, gymId, gymName, _, _) {
             ref.read(checkoutProvider.notifier).selectPlan(
               plan: plan,
               gymId: gymId,
               gymName: gymName,
             );
           },
-          paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, __) {
+          paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, _) {
             ref.read(checkoutProvider.notifier).selectPlan(
               plan: plan,
               gymId: gymId,
@@ -693,7 +693,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
             );
             ref.read(checkoutProvider.notifier).selectPaymentMethod(paymentMethod);
           },
-          cashPaymentSelected: (plan, gymId, gymName, _, __) {
+          cashPaymentSelected: (plan, gymId, gymName, _, _) {
             ref.read(checkoutProvider.notifier).selectPlan(
               plan: plan,
               gymId: gymId,
@@ -734,8 +734,8 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
       planSelected: (plan, gymId, gymName, promoCode, discount) {
         ref.read(checkoutProvider.notifier).selectPaymentMethod(paymentMethod);
       },
-      paymentMethodSelected: (_, __, ___, ____, _____, ______) {},
-      cashPaymentSelected: (_, __, ___, ____, _____) {},
+      paymentMethodSelected: (_, _, _, _, _, _) {},
+      cashPaymentSelected: (_, _, _, _, _) {},
       initial: () {},
       loading: () {},
       processing: () {},

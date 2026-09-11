@@ -46,6 +46,7 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
   int _resendCountdown = 24;
   Timer? _timer;
   bool _hasError = false;
+  // ignore: unused_field
   String? _errorMessage;
 
   @override
@@ -91,6 +92,7 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
     return widget.params?.phoneNumber ?? '***-***-1234';
   }
 
+  // ignore: unused_element
   Future<void> _handleBiometricAuth() async {
     setState(() => _isLoading = true);
 

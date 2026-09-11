@@ -1,0 +1,60 @@
+name: Flutter quality
+
+on:
+  push:
+    paths:
+      - '**/*.dart'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'analysis_options.yaml'
+      - '.metadata'
+      - '.github/workflows/flutter.yml'
+  pull_request:
+    paths:
+      - '**/*.dart'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'analysis_options.yaml'
+      - '.metadata'
+      - '.github/workflows/flutter.yml'
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter 3.38.5
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.38.5'
+          cache: true
+
+      - name: Resolve dependencies without changing the lockfile
+        run: |
+          before="$(sha256sum pubspec.lock | cut -d ' ' -f1)"
+          flutter pub get --enforce-lockfile
+          after="$(sha256sum pubspec.lock | cut -d ' ' -f1)"
+          test "$before" = "$after"
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Check formatting for added test Dart files
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          base_sha="$BASE_SHA"
+          if [[ -z "$base_sha" || "$base_sha" == "0000000000000000000000000000000000000000" ]]; then
+            base_sha="$(git rev-parse HEAD^)"
+          fi
+          mapfile -t dart_files < <(git diff --diff-filter=A --name-only "$base_sha" "$GITHUB_SHA" -- 'test/*.dart' 'test/**/*.dart')
+          if (${#dart_files[@]} > 0); then
+            dart format --output=none --set-exit-if-changed "${dart_files[@]}"
+          fi

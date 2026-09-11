@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/theme/theme.dart';
 import '../../atoms/atoms.dart';
-import '../../molecules/molecules.dart';
 import '../../../../../application/subscription/state/checkout_notifier.dart';
 import '../../../../../application/subscription/state/payment_methods_notifier.dart';
 
@@ -35,15 +34,15 @@ class _PaymentMethodSelectionPageState
     // Check if there's already a selected payment method from checkout state
     final checkoutState = ref.read(checkoutProvider);
     checkoutState.when(
-      paymentMethodSelected: (_, __, ___, paymentMethod, ____, _____) {
+      paymentMethodSelected: (_, _, _, paymentMethod, _, _) {
         selectedPaymentMethodId = paymentMethod.id;
         isCashSelected = false;
       },
-      cashPaymentSelected: (_, __, ___, ____, _____) {
+      cashPaymentSelected: (_, _, _, _, _) {
         isCashSelected = true;
         selectedPaymentMethodId = null;
       },
-      planSelected: (_, __, ___, ____, _____) {},
+      planSelected: (_, _, _, _, _) {},
       initial: () {},
       loading: () {},
       processing: () {},
@@ -221,7 +220,7 @@ class _PaymentMethodSelectionPageState
               ],
             ),
           ),
-          ...paymentMethods.map((method) => _buildCardOption(isDark, method)).toList(),
+          ...paymentMethods.map((method) => _buildCardOption(isDark, method)),
         ],
 
         if (paymentMethods.isEmpty) ...[

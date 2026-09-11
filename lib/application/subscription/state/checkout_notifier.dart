@@ -143,7 +143,7 @@ class Checkout extends _$Checkout {
       final result = await repository.applyPromoCode(subscriptionId, promoCode);
 
       state.when(
-        planSelected: (plan, gymId, gymName, _, __) {
+        planSelected: (plan, gymId, gymName, _, _) {
           state = CheckoutState.planSelected(
             plan: plan,
             gymId: gymId,
@@ -152,7 +152,7 @@ class Checkout extends _$Checkout {
             discount: result.discountAmount,
           );
         },
-        paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, __) {
+        paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, _) {
           state = CheckoutState.paymentMethodSelected(
             plan: plan,
             gymId: gymId,
@@ -162,7 +162,7 @@ class Checkout extends _$Checkout {
             discount: result.discountAmount,
           );
         },
-        cashPaymentSelected: (plan, gymId, gymName, _, __) {
+        cashPaymentSelected: (plan, gymId, gymName, _, _) {
           state = CheckoutState.cashPaymentSelected(
             plan: plan,
             gymId: gymId,
@@ -186,14 +186,14 @@ class Checkout extends _$Checkout {
   /// Remove applied promo code
   void removePromoCode() {
     state.when(
-      planSelected: (plan, gymId, gymName, _, __) {
+      planSelected: (plan, gymId, gymName, _, _) {
         state = CheckoutState.planSelected(
           plan: plan,
           gymId: gymId,
           gymName: gymName,
         );
       },
-      paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, __) {
+      paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, _) {
         state = CheckoutState.paymentMethodSelected(
           plan: plan,
           gymId: gymId,
@@ -201,7 +201,7 @@ class Checkout extends _$Checkout {
           paymentMethod: paymentMethod,
         );
       },
-      cashPaymentSelected: (plan, gymId, gymName, _, __) {
+      cashPaymentSelected: (plan, gymId, gymName, _, _) {
         state = CheckoutState.cashPaymentSelected(
           plan: plan,
           gymId: gymId,

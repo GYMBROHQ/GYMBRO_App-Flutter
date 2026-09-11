@@ -19,6 +19,7 @@ class DeviceVerificationPage extends StatefulWidget {
 }
 
 class _DeviceVerificationPageState extends State<DeviceVerificationPage> {
+  // ignore: unused_field
   bool _isVerifying = false;
   bool _isResending = false;
   int _resendCountdown = 24;

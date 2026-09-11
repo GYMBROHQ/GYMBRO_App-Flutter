@@ -2,6 +2,7 @@
 ///
 /// These models are used with `state.extra` for routes that need to pass
 /// complex data that shouldn't be serialized in URLs.
+library;
 
 /// Data model for payment success page
 class PaymentSuccessData {

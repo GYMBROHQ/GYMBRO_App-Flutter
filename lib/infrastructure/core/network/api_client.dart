@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'api_endpoints.dart';
 
 /// Creates and configures the Dio HTTP client
@@ -29,7 +30,7 @@ class ApiClient {
         responseHeader: true,
         responseBody: true,
         error: true,
-        logPrint: (obj) => print('[Dio] $obj'),
+        logPrint: (obj) => debugPrint('[Dio] $obj'),
       ),
     );
 

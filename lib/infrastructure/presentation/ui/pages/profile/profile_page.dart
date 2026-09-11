@@ -542,9 +542,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       child: InkWell(
         onTap: () async {
           await ref.read(themeNotifierProvider.notifier).setThemeMode(mode);
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
         },
         borderRadius: BorderRadius.circular(12),
         child: Container(

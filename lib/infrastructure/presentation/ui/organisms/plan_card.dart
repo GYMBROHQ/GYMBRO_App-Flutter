@@ -138,7 +138,7 @@ class PlanCard extends StatelessWidget {
                     ],
                   ),
                 );
-              }).toList(),
+              }),
               SizedBox(height: AppSpacing.spacing2),
               // Select button
               AppButton(

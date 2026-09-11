@@ -33,8 +33,11 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
   bool _isResending = false;
   String _otpCode = '';
   bool _hasError = false;
+  // ignore: unused_field
   String? _errorMessage;
+  // ignore: unused_field
   MfaSetup? _mfaSetup;
+  // ignore: unused_field
   MfaBackupCodes? _backupCodes;
 
   @override

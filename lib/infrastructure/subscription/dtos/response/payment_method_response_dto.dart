@@ -13,11 +13,14 @@ class PaymentMethodResponseDto with _$PaymentMethodResponseDto {
     // Flattened card fields (from backend)
     String? last4,
     String? brand,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'exp_month') int? expMonth,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'exp_year') int? expYear,
     bool? isDefault,
     // Legacy nested card object (for Stripe direct responses)
     PaymentMethodCardDto? card,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'customer_id') String? customerId,
     int? created,
   }) = _PaymentMethodResponseDto;
@@ -32,7 +35,9 @@ class PaymentMethodCardDto with _$PaymentMethodCardDto {
   const factory PaymentMethodCardDto({
     required String brand,
     required String last4,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'exp_month') int? expMonth,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'exp_year') int? expYear,
     String? funding,
     String? country,
