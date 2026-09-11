@@ -220,7 +220,8 @@ class Checkout extends _$Checkout {
   Future<void> completePurchase() async {
     // Check if we're in the right state
     final currentState = state;
-    if (currentState is! _PaymentMethodSelected && currentState is! _CashPaymentSelected) {
+    if (currentState is! _PaymentMethodSelected &&
+        currentState is! _CashPaymentSelected) {
       state = const CheckoutState.failure('Please select a payment method');
       return;
     }

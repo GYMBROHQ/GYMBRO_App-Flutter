@@ -7,7 +7,8 @@ import '../../atoms/atoms.dart';
 import '../../molecules/molecules.dart';
 import '../../../../../application/subscription/state/checkout_notifier.dart';
 import '../../../../../application/subscription/state/payment_methods_notifier.dart';
-import '../../../../../domain/subscription/entities/subscription.dart' as domain;
+import '../../../../../domain/subscription/entities/subscription.dart'
+    as domain;
 
 /// Payment Checkout Page - Final checkout screen with payment method selection
 /// Design: aggressive mobile-first revision from GYMBRO_Docs
@@ -22,7 +23,8 @@ class PaymentCheckoutPage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PaymentCheckoutPage> createState() => _PaymentCheckoutPageState();
+  ConsumerState<PaymentCheckoutPage> createState() =>
+      _PaymentCheckoutPageState();
 }
 
 class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
@@ -37,74 +39,79 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
     final isDark = theme.brightness == Brightness.dark;
 
     final checkoutState = ref.watch(checkoutProvider);
-    debugPrint('🔴 [PaymentCheckoutPage] Checkout state: ${checkoutState.runtimeType}');
+    debugPrint(
+      '🔴 [PaymentCheckoutPage] Checkout state: ${checkoutState.runtimeType}',
+    );
     final paymentMethodsAsync = ref.watch(paymentMethodsProvider);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? DarkAppColors.backgroundPrimary : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? DarkAppColors.backgroundPrimary
+          : AppColors.backgroundPrimary,
       appBar: _buildAppBar(context, isDark),
       body: checkoutState.when(
         initial: () => _buildError('No checkout session found', isDark),
         loading: () => _buildLoading(),
         planSelected: (plan, gymId, gymName, promoCode, discount) =>
             paymentMethodsAsync.when(
-          data: (methods) => _buildContent(
-            context,
-            isDark,
-            plan.name,
-            gymName,
-            plan.price.amount,
-            discount ?? 0,
-            methods,
-            promoCode,
-          ),
-          loading: () => _buildLoading(),
-          error: (error, stack) => _buildError(error.toString(), isDark),
-        ),
-        paymentMethodSelected: (plan, gymId, gymName, paymentMethod, promoCode, discount) =>
-            paymentMethodsAsync.when(
-          data: (methods) {
-            // Auto-select the already chosen payment method
-            if (selectedPaymentMethodId == null && !isCashSelected) {
-              selectedPaymentMethodId = paymentMethod.id;
-            }
-            return _buildContent(
-              context,
-              isDark,
-              plan.name,
-              gymName,
-              plan.price.amount,
-              discount ?? 0,
-              methods,
-              promoCode,
-            );
-          },
-          loading: () => _buildLoading(),
-          error: (error, stack) => _buildError(error.toString(), isDark),
-        ),
+              data: (methods) => _buildContent(
+                context,
+                isDark,
+                plan.name,
+                gymName,
+                plan.price.amount,
+                discount ?? 0,
+                methods,
+                promoCode,
+              ),
+              loading: () => _buildLoading(),
+              error: (error, stack) => _buildError(error.toString(), isDark),
+            ),
+        paymentMethodSelected:
+            (plan, gymId, gymName, paymentMethod, promoCode, discount) =>
+                paymentMethodsAsync.when(
+                  data: (methods) {
+                    // Auto-select the already chosen payment method
+                    if (selectedPaymentMethodId == null && !isCashSelected) {
+                      selectedPaymentMethodId = paymentMethod.id;
+                    }
+                    return _buildContent(
+                      context,
+                      isDark,
+                      plan.name,
+                      gymName,
+                      plan.price.amount,
+                      discount ?? 0,
+                      methods,
+                      promoCode,
+                    );
+                  },
+                  loading: () => _buildLoading(),
+                  error: (error, stack) =>
+                      _buildError(error.toString(), isDark),
+                ),
         cashPaymentSelected: (plan, gymId, gymName, promoCode, discount) =>
             paymentMethodsAsync.when(
-          data: (methods) {
-            // Auto-select cash payment
-            if (!isCashSelected) {
-              isCashSelected = true;
-              selectedPaymentMethodId = null;
-            }
-            return _buildContent(
-              context,
-              isDark,
-              plan.name,
-              gymName,
-              plan.price.amount,
-              discount ?? 0,
-              methods,
-              promoCode,
-            );
-          },
-          loading: () => _buildLoading(),
-          error: (error, stack) => _buildError(error.toString(), isDark),
-        ),
+              data: (methods) {
+                // Auto-select cash payment
+                if (!isCashSelected) {
+                  isCashSelected = true;
+                  selectedPaymentMethodId = null;
+                }
+                return _buildContent(
+                  context,
+                  isDark,
+                  plan.name,
+                  gymName,
+                  plan.price.amount,
+                  discount ?? 0,
+                  methods,
+                  promoCode,
+                );
+              },
+              loading: () => _buildLoading(),
+              error: (error, stack) => _buildError(error.toString(), isDark),
+            ),
         processing: () => _buildProcessing(isDark),
         success: (subscription) {
           // Navigate to success page
@@ -119,7 +126,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                 userEmail: 'user@example.com', // TODO: Get from auth
                 startDate: subscription.startDate.toString(),
                 expiryDate: subscription.endDate.toString(),
-                isPending: subscription.status == domain.SubscriptionStatus.pendingPayment,
+                isPending:
+                    subscription.status ==
+                    domain.SubscriptionStatus.pendingPayment,
               ),
             );
           });
@@ -154,7 +163,13 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildOrderSummaryCard(isDark, gymName, planName, subtotal, discount),
+              _buildOrderSummaryCard(
+                isDark,
+                gymName,
+                planName,
+                subtotal,
+                discount,
+              ),
               SizedBox(height: AppSpacing.spacing6),
               _buildPromoCodeSection(isDark, promoCode, discount),
               SizedBox(height: AppSpacing.spacing6),
@@ -203,7 +218,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
             Text(
               'Checkout Error',
               style: AppTypography.h5.copyWith(
-                color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                color: isDark
+                    ? DarkAppColors.textPrimary
+                    : AppColors.textPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.spacing2),
@@ -211,7 +228,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
               error,
               textAlign: TextAlign.center,
               style: AppTypography.bodySm.copyWith(
-                color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                color: isDark
+                    ? DarkAppColors.textSecondary
+                    : AppColors.textSecondary,
               ),
             ),
             SizedBox(height: AppSpacing.spacing4),
@@ -228,13 +247,12 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isDark) {
     return AppBar(
-      backgroundColor:
-          isDark ? DarkAppColors.backgroundPrimary : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? DarkAppColors.backgroundPrimary
+          : AppColors.backgroundPrimary,
       elevation: 0,
       centerTitle: true,
-      leading: AppBackButton(
-        onPressed: () => context.pop(),
-      ),
+      leading: AppBackButton(onPressed: () => context.pop()),
       title: Text(
         'Checkout',
         style: AppTypography.h5.copyWith(
@@ -277,14 +295,18 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                     Text(
                       gymName,
                       style: AppTypography.h6.copyWith(
-                        color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                        color: isDark
+                            ? DarkAppColors.textPrimary
+                            : AppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: AppSpacing.spacing1),
                     Text(
                       planName,
                       style: AppTypography.bodySm.copyWith(
-                        color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                        color: isDark
+                            ? DarkAppColors.textSecondary
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -298,7 +320,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(
-                    color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+                    color: isDark
+                        ? DarkAppColors.borderDefault
+                        : AppColors.borderDefault,
                     width: 1,
                   ),
                 ),
@@ -312,13 +336,17 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                       Text(
                         'Subtotal',
                         style: AppTypography.bodyMd.copyWith(
-                          color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                          color: isDark
+                              ? DarkAppColors.textSecondary
+                              : AppColors.textSecondary,
                         ),
                       ),
                       Text(
                         '\$${subtotal.toStringAsFixed(2)}',
                         style: AppTypography.bodyMd.copyWith(
-                          color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                          color: isDark
+                              ? DarkAppColors.textPrimary
+                              : AppColors.textPrimary,
                         ),
                       ),
                     ],
@@ -348,7 +376,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                     decoration: BoxDecoration(
                       border: Border(
                         top: BorderSide(
-                          color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+                          color: isDark
+                              ? DarkAppColors.borderDefault
+                              : AppColors.borderDefault,
                           width: 1,
                         ),
                       ),
@@ -360,7 +390,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                         Text(
                           'Total',
                           style: AppTypography.h6.copyWith(
-                            color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                            color: isDark
+                                ? DarkAppColors.textPrimary
+                                : AppColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -390,11 +422,14 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
 
     if (isCashSelected) {
       paymentLabel = 'Pay with Cash';
-      paymentDetails = 'Pay at the gym. Subscription activates after staff confirmation.';
+      paymentDetails =
+          'Pay at the gym. Subscription activates after staff confirmation.';
       paymentIcon = Icons.payments_outlined;
     } else if (selectedPaymentMethodId != null) {
       // Find the selected payment method
-      final matches = paymentMethods.where((m) => m.id == selectedPaymentMethodId);
+      final matches = paymentMethods.where(
+        (m) => m.id == selectedPaymentMethodId,
+      );
       final selectedMethod = matches.isNotEmpty ? matches.first : null;
 
       if (selectedMethod != null) {
@@ -421,17 +456,23 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
             Text(
               'Payment Method',
               style: AppTypography.h6.copyWith(
-                color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                color: isDark
+                    ? DarkAppColors.textPrimary
+                    : AppColors.textPrimary,
               ),
             ),
             TextButton.icon(
               onPressed: () {
-                context.push('/gyms/${widget.gymId}/plans/${widget.planId}/payment-method');
+                context.push(
+                  '/gyms/${widget.gymId}/plans/${widget.planId}/payment-method',
+                );
               },
               icon: const Icon(Icons.edit, size: 18),
               label: Text(
                 'Change',
-                style: AppTypography.labelSm.copyWith(color: AppColors.primary500),
+                style: AppTypography.labelSm.copyWith(
+                  color: AppColors.primary500,
+                ),
               ),
             ),
           ],
@@ -444,10 +485,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                 ? DarkAppColors.surfaceElevated1
                 : AppColors.backgroundPrimary,
             borderRadius: AppBorderRadius.lg,
-            border: Border.all(
-              color: AppColors.primary500,
-              width: 2,
-            ),
+            border: Border.all(color: AppColors.primary500, width: 2),
           ),
           child: Row(
             children: [
@@ -457,11 +495,7 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                   color: AppColors.primary500.withValues(alpha: 0.1),
                   borderRadius: AppBorderRadius.md,
                 ),
-                child: Icon(
-                  paymentIcon,
-                  size: 28,
-                  color: AppColors.primary500,
-                ),
+                child: Icon(paymentIcon, size: 28, color: AppColors.primary500),
               ),
               SizedBox(width: AppSpacing.spacing3),
               Expanded(
@@ -471,7 +505,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                     Text(
                       paymentLabel,
                       style: AppTypography.bodyMd.copyWith(
-                        color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                        color: isDark
+                            ? DarkAppColors.textPrimary
+                            : AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -479,17 +515,15 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                     Text(
                       paymentDetails,
                       style: AppTypography.bodySm.copyWith(
-                        color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                        color: isDark
+                            ? DarkAppColors.textSecondary
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.check_circle,
-                color: AppColors.success500,
-                size: 24,
-              ),
+              Icon(Icons.check_circle, color: AppColors.success500, size: 24),
             ],
           ),
         ),
@@ -513,7 +547,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
             },
             activeColor: AppColors.primary500,
             side: BorderSide(
-              color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+              color: isDark
+                  ? DarkAppColors.borderDefault
+                  : AppColors.borderDefault,
               width: 2,
             ),
           ),
@@ -523,7 +559,9 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
           child: RichText(
             text: TextSpan(
               style: AppTypography.bodySm.copyWith(
-                color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                color: isDark
+                    ? DarkAppColors.textSecondary
+                    : AppColors.textSecondary,
               ),
               children: [
                 const TextSpan(text: 'I agree to the '),
@@ -544,7 +582,8 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
   }
 
   Widget _buildStickyFooter(bool isDark, double total) {
-    final canProceed = agreedToTerms && (selectedPaymentMethodId != null || isCashSelected);
+    final canProceed =
+        agreedToTerms && (selectedPaymentMethodId != null || isCashSelected);
 
     return Positioned(
       bottom: 0,
@@ -552,10 +591,14 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
       right: 0,
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? DarkAppColors.backgroundPrimary : AppColors.backgroundPrimary,
+          color: isDark
+              ? DarkAppColors.backgroundPrimary
+              : AppColors.backgroundPrimary,
           border: Border(
             top: BorderSide(
-              color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+              color: isDark
+                  ? DarkAppColors.borderDefault
+                  : AppColors.borderDefault,
               width: 1,
             ),
           ),
@@ -577,13 +620,17 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                   Icon(
                     Icons.lock,
                     size: 14,
-                    color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                    color: isDark
+                        ? DarkAppColors.textSecondary
+                        : AppColors.textSecondary,
                   ),
                   SizedBox(width: AppSpacing.spacing1),
                   Text(
                     'Secured by Stripe',
                     style: AppTypography.labelXs.copyWith(
-                      color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                      color: isDark
+                          ? DarkAppColors.textSecondary
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -595,13 +642,17 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
                   Icon(
                     Icons.info_outline,
                     size: 14,
-                    color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                    color: isDark
+                        ? DarkAppColors.textSecondary
+                        : AppColors.textSecondary,
                   ),
                   SizedBox(width: AppSpacing.spacing1),
                   Text(
                     'Pending approval after payment at gym',
                     style: AppTypography.labelXs.copyWith(
-                      color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                      color: isDark
+                          ? DarkAppColors.textSecondary
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -642,28 +693,24 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
         final checkoutState = ref.read(checkoutProvider);
         checkoutState.when(
           planSelected: (plan, gymId, gymName, _, _) {
-            ref.read(checkoutProvider.notifier).selectPlan(
-              plan: plan,
-              gymId: gymId,
-              gymName: gymName,
-            );
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPlan(plan: plan, gymId: gymId, gymName: gymName);
             // TODO: Replace with actual API validation when backend supports it
             // await ref.read(checkoutProvider.notifier).applyPromoCode(subscriptionId, code);
           },
           paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, _) {
-            ref.read(checkoutProvider.notifier).selectPlan(
-              plan: plan,
-              gymId: gymId,
-              gymName: gymName,
-            );
-            ref.read(checkoutProvider.notifier).selectPaymentMethod(paymentMethod);
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPlan(plan: plan, gymId: gymId, gymName: gymName);
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPaymentMethod(paymentMethod);
           },
           cashPaymentSelected: (plan, gymId, gymName, _, _) {
-            ref.read(checkoutProvider.notifier).selectPlan(
-              plan: plan,
-              gymId: gymId,
-              gymName: gymName,
-            );
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPlan(plan: plan, gymId: gymId, gymName: gymName);
             ref.read(checkoutProvider.notifier).selectCashPayment();
           },
           initial: () {},
@@ -679,26 +726,22 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
         final checkoutState = ref.read(checkoutProvider);
         checkoutState.when(
           planSelected: (plan, gymId, gymName, _, _) {
-            ref.read(checkoutProvider.notifier).selectPlan(
-              plan: plan,
-              gymId: gymId,
-              gymName: gymName,
-            );
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPlan(plan: plan, gymId: gymId, gymName: gymName);
           },
           paymentMethodSelected: (plan, gymId, gymName, paymentMethod, _, _) {
-            ref.read(checkoutProvider.notifier).selectPlan(
-              plan: plan,
-              gymId: gymId,
-              gymName: gymName,
-            );
-            ref.read(checkoutProvider.notifier).selectPaymentMethod(paymentMethod);
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPlan(plan: plan, gymId: gymId, gymName: gymName);
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPaymentMethod(paymentMethod);
           },
           cashPaymentSelected: (plan, gymId, gymName, _, _) {
-            ref.read(checkoutProvider.notifier).selectPlan(
-              plan: plan,
-              gymId: gymId,
-              gymName: gymName,
-            );
+            ref
+                .read(checkoutProvider.notifier)
+                .selectPlan(plan: plan, gymId: gymId, gymName: gymName);
             ref.read(checkoutProvider.notifier).selectCashPayment();
           },
           initial: () {},
@@ -723,8 +766,12 @@ class _PaymentCheckoutPageState extends ConsumerState<PaymentCheckoutPage> {
 
     // Get the selected payment method for card payment
     final paymentMethodsAsync = ref.read(paymentMethodsProvider);
-    final matches = paymentMethodsAsync.value?.where((m) => m.id == selectedPaymentMethodId);
-    final paymentMethod = matches != null && matches.isNotEmpty ? matches.first : null;
+    final matches = paymentMethodsAsync.value?.where(
+      (m) => m.id == selectedPaymentMethodId,
+    );
+    final paymentMethod = matches != null && matches.isNotEmpty
+        ? matches.first
+        : null;
 
     if (paymentMethod == null) return;
 

@@ -4,10 +4,7 @@ import 'api_endpoints.dart';
 
 /// Creates and configures the Dio HTTP client
 class ApiClient {
-  static Dio createDio({
-    String? baseUrl,
-    List<Interceptor>? interceptors,
-  }) {
+  static Dio createDio({String? baseUrl, List<Interceptor>? interceptors}) {
     final dio = Dio(
       BaseOptions(
         baseUrl: baseUrl ?? ApiEndpoints.baseUrl,

@@ -9,10 +9,7 @@ import '../../templates/templates.dart';
 class DeviceVerificationPage extends StatefulWidget {
   final String? email;
 
-  const DeviceVerificationPage({
-    super.key,
-    this.email,
-  });
+  const DeviceVerificationPage({super.key, this.email});
 
   @override
   State<DeviceVerificationPage> createState() => _DeviceVerificationPageState();
@@ -93,9 +90,9 @@ class _DeviceVerificationPageState extends State<DeviceVerificationPage> {
     if (mounted) {
       setState(() => _isResending = false);
       _startResendTimer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Verification code sent!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Verification code sent!')));
     }
   }
 

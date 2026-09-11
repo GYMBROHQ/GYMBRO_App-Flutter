@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Flutter 3.38.5
         uses: subosito/flutter-action@v2
@@ -45,16 +47,45 @@ jobs:
       - name: Test
         run: flutter test
 
-      - name: Check formatting for added test Dart files
+      - name: Check formatting for changed Dart files
         shell: bash
         env:
           BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
         run: |
+          set -euo pipefail
+
+          changed_file_list="$(mktemp)"
+          trap 'rm -f "$changed_file_list"' EXIT
+
           base_sha="$BASE_SHA"
           if [[ -z "$base_sha" || "$base_sha" == "0000000000000000000000000000000000000000" ]]; then
-            base_sha="$(git rev-parse HEAD^)"
+            if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+              base_sha="$(git rev-parse HEAD^)"
+            else
+              base_sha=""
+            fi
           fi
-          mapfile -t dart_files < <(git diff --diff-filter=A --name-only "$base_sha" "$GITHUB_SHA" -- 'test/*.dart' 'test/**/*.dart')
-          if (${#dart_files[@]} > 0); then
+
+          if ! git cat-file -e "$GITHUB_SHA^{commit}"; then
+            echo "GitHub SHA is not available: $GITHUB_SHA" >&2
+            exit 1
+          fi
+
+          if [[ -n "$base_sha" ]]; then
+            if ! git cat-file -e "$base_sha^{commit}"; then
+              echo "Base SHA is not available: $base_sha" >&2
+              exit 1
+            fi
+            if ! git diff --diff-filter=ACMR --name-only "$base_sha" "$GITHUB_SHA" -- '*.dart' >"$changed_file_list"; then
+              echo "Unable to discover changed Dart files" >&2
+              exit 1
+            fi
+          elif ! git diff-tree --root --no-commit-id --diff-filter=ACMR --name-only -r "$GITHUB_SHA" -- '*.dart' >"$changed_file_list"; then
+            echo "Unable to discover Dart files in the initial commit" >&2
+            exit 1
+          fi
+
+          mapfile -t dart_files <"$changed_file_list"
+          if ((${#dart_files[@]} > 0)); then
             dart format --output=none --set-exit-if-changed "${dart_files[@]}"
           fi

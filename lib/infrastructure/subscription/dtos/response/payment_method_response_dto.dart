@@ -61,9 +61,8 @@ class PaymentMethodListDto with _$PaymentMethodListDto {
 /// DTO for setup intent response from API
 @freezed
 class SetupIntentDto with _$SetupIntentDto {
-  const factory SetupIntentDto({
-    required String clientSecret,
-  }) = _SetupIntentDto;
+  const factory SetupIntentDto({required String clientSecret}) =
+      _SetupIntentDto;
 
   factory SetupIntentDto.fromJson(Map<String, dynamic> json) =>
       _$SetupIntentDtoFromJson(json);
