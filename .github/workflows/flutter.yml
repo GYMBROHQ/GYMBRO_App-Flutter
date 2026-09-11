@@ -57,21 +57,28 @@ jobs:
           changed_file_list="$(mktemp)"
           trap 'rm -f "$changed_file_list"' EXIT
 
-          base_sha="$BASE_SHA"
-          if [[ -z "$base_sha" || "$base_sha" == "0000000000000000000000000000000000000000" ]]; then
-            if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
-              base_sha="$(git rev-parse HEAD^)"
-            else
-              base_sha=""
-            fi
-          fi
-
           if ! git cat-file -e "$GITHUB_SHA^{commit}"; then
             echo "GitHub SHA is not available: $GITHUB_SHA" >&2
             exit 1
           fi
 
-          if [[ -n "$base_sha" ]]; then
+          base_sha="$BASE_SHA"
+          use_current_tree=false
+          if [[ -z "$base_sha" || "$base_sha" == "0000000000000000000000000000000000000000" ]]; then
+            if git rev-parse --verify "$GITHUB_SHA^" >/dev/null 2>&1; then
+              if ! git ls-tree -r --name-only "$GITHUB_SHA" | grep -E '\.dart$' >"$changed_file_list"; then
+                echo "Unable to discover Dart files in the current tree" >&2
+                exit 1
+              fi
+              use_current_tree=true
+            else
+              base_sha=""
+            fi
+          fi
+
+          if [[ "$use_current_tree" == true ]]; then
+            :
+          elif [[ -n "$base_sha" ]]; then
             if ! git cat-file -e "$base_sha^{commit}"; then
               echo "Base SHA is not available: $base_sha" >&2
               exit 1
