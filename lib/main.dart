@@ -9,7 +9,7 @@ import 'infrastructure/providers/providers.dart';
 import 'infrastructure/presentation/ui/widgets/app_lifecycle_observer.dart';
 import 'infrastructure/presentation/ui/pages/auth/biometric_lock_page.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Ensure Google Fonts uses Inter as the default font
