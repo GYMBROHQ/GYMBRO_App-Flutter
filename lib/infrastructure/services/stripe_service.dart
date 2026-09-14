@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -6,6 +7,10 @@ class StripeService {
   /// Initialize Stripe with publishable key
   /// Should be called early in app startup
   static Future<void> initialize(String publishableKey) async {
+    if (kIsWeb) {
+      return;
+    }
+
     Stripe.publishableKey = publishableKey;
     // Optionally set merchant identifier for Apple Pay
     // Stripe.merchantIdentifier = 'merchant.com.gymbro';
