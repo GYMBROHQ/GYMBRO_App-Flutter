@@ -46,9 +46,7 @@ class PlanCard extends StatelessWidget {
             border: Border.all(
               color: isHighlighted
                   ? AppColors.primary500
-                  : (isDark
-                        ? DarkAppColors.borderDefault
-                        : AppColors.borderDefault),
+                  : (isDark ? DarkAppColors.borderDefault : AppColors.borderDefault),
               width: isHighlighted ? 2 : 1,
             ),
             boxShadow: isHighlighted
@@ -72,13 +70,10 @@ class PlanCard extends StatelessWidget {
                   Text(
                     title.toUpperCase(),
                     style: AppTypography.labelSm.copyWith(
-                      color:
-                          titleColor ??
+                      color: titleColor ??
                           (isHighlighted
                               ? AppColors.primary500
-                              : (isDark
-                                    ? DarkAppColors.textSecondary
-                                    : AppColors.textSecondary)),
+                              : (isDark ? DarkAppColors.textSecondary : AppColors.textSecondary)),
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.5,
                     ),
@@ -90,9 +85,7 @@ class PlanCard extends StatelessWidget {
                       Text(
                         '\$${price.toStringAsFixed(0)}',
                         style: AppTypography.displaySm.copyWith(
-                          color: isDark
-                              ? DarkAppColors.textPrimary
-                              : AppColors.textPrimary,
+                          color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
                           fontWeight: FontWeight.w900,
                           height: 1.0,
                         ),
@@ -103,9 +96,7 @@ class PlanCard extends StatelessWidget {
                         child: Text(
                           '/$period',
                           style: AppTypography.bodyMd.copyWith(
-                            color: isDark
-                                ? DarkAppColors.textSecondary
-                                : AppColors.textSecondary,
+                            color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
                           ),
                         ),
                       ),
@@ -117,9 +108,7 @@ class PlanCard extends StatelessWidget {
               // Divider
               Container(
                 height: 1,
-                color: isDark
-                    ? DarkAppColors.borderDefault
-                    : AppColors.borderDefault,
+                color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
               ),
               SizedBox(height: AppSpacing.spacing5),
               // Features list
@@ -140,9 +129,7 @@ class PlanCard extends StatelessWidget {
                           feature,
                           style: AppTypography.bodyMd.copyWith(
                             color: isDark
-                                ? DarkAppColors.textPrimary.withValues(
-                                    alpha: 0.9,
-                                  )
+                                ? DarkAppColors.textPrimary.withValues(alpha: 0.9)
                                 : AppColors.textPrimary.withValues(alpha: 0.9),
                             fontWeight: FontWeight.w500,
                           ),
@@ -151,20 +138,16 @@ class PlanCard extends StatelessWidget {
                     ],
                   ),
                 );
-              }),
+              }).toList(),
               SizedBox(height: AppSpacing.spacing2),
               // Select button
               AppButton(
-                text: isCurrentPlan
-                    ? 'Current Plan'
-                    : 'Select ${title.toLowerCase()}',
+                text: isCurrentPlan ? 'Current Plan' : 'Select ${title.toLowerCase()}',
                 onPressed: isCurrentPlan ? null : onSelect,
                 isFullWidth: true,
                 variant: isCurrentPlan
                     ? ButtonVariant.outlined
-                    : (isHighlighted
-                          ? ButtonVariant.primary
-                          : ButtonVariant.outlined),
+                    : (isHighlighted ? ButtonVariant.primary : ButtonVariant.outlined),
               ),
             ],
           ),
@@ -186,9 +169,7 @@ class PlanCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 border: (!isCurrentPlan && badgeColor != null)
                     ? Border.all(
-                        color: isDark
-                            ? DarkAppColors.borderDefault
-                            : AppColors.borderDefault,
+                        color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
                         width: 1,
                       )
                     : null,
