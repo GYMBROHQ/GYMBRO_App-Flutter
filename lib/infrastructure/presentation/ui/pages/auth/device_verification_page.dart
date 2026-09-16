@@ -9,17 +9,13 @@ import '../../templates/templates.dart';
 class DeviceVerificationPage extends StatefulWidget {
   final String? email;
 
-  const DeviceVerificationPage({
-    super.key,
-    this.email,
-  });
+  const DeviceVerificationPage({super.key, this.email});
 
   @override
   State<DeviceVerificationPage> createState() => _DeviceVerificationPageState();
 }
 
 class _DeviceVerificationPageState extends State<DeviceVerificationPage> {
-  bool _isVerifying = false;
   bool _isResending = false;
   int _resendCountdown = 24;
   Timer? _timer;
@@ -67,18 +63,12 @@ class _DeviceVerificationPageState extends State<DeviceVerificationPage> {
       return;
     }
 
-    setState(() {
-      _isVerifying = true;
-      _hasError = false;
-    });
+    setState(() => _hasError = false);
 
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
 
-    if (mounted) {
-      setState(() => _isVerifying = false);
-      // Navigate to home or show success
-    }
+    // Navigate to home or show success
   }
 
   Future<void> _handleResendCode() async {
@@ -92,9 +82,9 @@ class _DeviceVerificationPageState extends State<DeviceVerificationPage> {
     if (mounted) {
       setState(() => _isResending = false);
       _startResendTimer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Verification code sent!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Verification code sent!')));
     }
   }
 

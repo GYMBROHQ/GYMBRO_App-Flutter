@@ -11,12 +11,7 @@ import '../../../../providers/providers.dart';
 import '../../../../../domain/auth/auth.dart';
 
 /// Steps in the MFA setup process
-enum MfaSetupStep {
-  loading,
-  qrCode,
-  verification,
-  success,
-}
+enum MfaSetupStep { loading, qrCode, verification, success }
 
 /// Single-page MFA setup flow with QR code, verification, and success states
 class MfaSetupPage extends ConsumerStatefulWidget {
@@ -33,9 +28,7 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
   bool _isResending = false;
   String _otpCode = '';
   bool _hasError = false;
-  String? _errorMessage;
   MfaSetup? _mfaSetup;
-  MfaBackupCodes? _backupCodes;
 
   @override
   void initState() {
@@ -44,7 +37,9 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
   }
 
   Future<void> _initiateMfaSetup() async {
-    final mfaSetup = await ref.read(authNotifierProvider.notifier).initiateMfaSetup();
+    final mfaSetup = await ref
+        .read(authNotifierProvider.notifier)
+        .initiateMfaSetup();
 
     if (mounted) {
       if (mfaSetup != null) {
@@ -54,7 +49,6 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
         });
       } else {
         setState(() {
-          _errorMessage = 'Failed to initiate MFA setup. Please try again.';
           _currentStep = MfaSetupStep.qrCode;
         });
       }
@@ -85,9 +79,9 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
 
     await Clipboard.setData(ClipboardData(text: code));
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Code copied to clipboard')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Code copied to clipboard')));
     }
   }
 
@@ -106,10 +100,7 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
 
     final mfaToken = _mfaSetup?.mfaToken;
     if (mfaToken == null) {
-      setState(() {
-        _hasError = true;
-        _errorMessage = 'MFA session expired. Please try again.';
-      });
+      setState(() => _hasError = true);
       return;
     }
 
@@ -118,15 +109,13 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
       _isResending = true;
     });
 
-    final backupCodes = await ref.read(authNotifierProvider.notifier).completeMfaSetup(
-          mfaToken: mfaToken,
-          totpCode: _otpCode,
-        );
+    final backupCodes = await ref
+        .read(authNotifierProvider.notifier)
+        .completeMfaSetup(mfaToken: mfaToken, totpCode: _otpCode);
 
     if (mounted) {
       if (backupCodes != null) {
         setState(() {
-          _backupCodes = backupCodes;
           _currentStep = MfaSetupStep.success;
           _isResending = false;
         });
@@ -134,7 +123,6 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
       } else {
         setState(() {
           _hasError = true;
-          _errorMessage = 'Invalid code. Please try again.';
           _isResending = false;
         });
       }
@@ -152,9 +140,9 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
     if (mounted) {
       setState(() => _isResending = false);
       _startResendTimer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Verification code sent!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Verification code sent!')));
     }
   }
 
@@ -526,7 +514,9 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
           const SizedBox(height: AppSpacing.spacing3),
           // Subtitle
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.spacing6),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.spacing6,
+            ),
             child: Text(
               'Two-Factor Authentication is now enabled on your account. Your security has been enhanced.',
               style: AppTypography.bodyMd.copyWith(
@@ -546,10 +536,7 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
                   : AppColors.warning50,
               borderRadius: AppBorderRadius.lg,
               border: Border(
-                left: BorderSide(
-                  color: AppColors.warning500,
-                  width: 4,
-                ),
+                left: BorderSide(color: AppColors.warning500, width: 4),
               ),
             ),
             child: Row(
@@ -592,7 +579,9 @@ class _MfaSetupPageState extends ConsumerState<MfaSetupPage> {
           const Spacer(),
           // Continue button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.spacing4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.spacing4,
+            ),
             child: AppButton(
               text: 'Continue to Dashboard',
               onPressed: () => context.go('/home'),

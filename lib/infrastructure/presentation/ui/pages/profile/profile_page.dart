@@ -213,10 +213,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         // Avatar with edit button
         Stack(
           children: [
-            AppAvatar(
-              imageUrl: user?.avatarUrl ?? '',
-              size: 96,
-            ),
+            AppAvatar(imageUrl: user?.avatarUrl ?? '', size: 96),
             Positioned(
               bottom: 0,
               right: 0,
@@ -225,10 +222,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary,
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: backgroundColor,
-                    width: 2,
-                  ),
+                  border: Border.all(color: backgroundColor, width: 2),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.1),
@@ -237,11 +231,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.edit,
-                  size: 14,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.edit, size: 14, color: Colors.white),
               ),
             ),
           ],
@@ -263,9 +253,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         Text(
           user?.email.value ?? '',
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: isDark
-                ? DarkAppColors.textMuted
-                : AppColors.neutral600,
+            color: isDark ? DarkAppColors.textMuted : AppColors.neutral600,
           ),
         ),
       ],
@@ -276,24 +264,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return const Row(
       children: [
         Expanded(
-          child: StatCard(
-            label: 'Active Passes',
-            value: '3',
-          ),
+          child: StatCard(label: 'Active Passes', value: '3'),
         ),
         SizedBox(width: 12),
         Expanded(
-          child: StatCard(
-            label: 'Gyms Visited',
-            value: '12',
-          ),
+          child: StatCard(label: 'Gyms Visited', value: '12'),
         ),
         SizedBox(width: 12),
         Expanded(
-          child: StatCard(
-            label: 'Total Visits',
-            value: '145',
-          ),
+          child: StatCard(label: 'Total Visits', value: '145'),
         ),
       ],
     );
@@ -349,18 +328,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         }
       },
       style: OutlinedButton.styleFrom(
-        foregroundColor: isDark
-            ? DarkAppColors.error500
-            : AppColors.error500,
+        foregroundColor: isDark ? DarkAppColors.error500 : AppColors.error500,
         side: BorderSide(
           color: AppColors.error500.withValues(alpha: 0.5),
           width: 2,
         ),
         backgroundColor: AppColors.error500.withValues(alpha: 0.1),
         padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -368,18 +343,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           Icon(
             Icons.logout,
             size: 20,
-            color: isDark
-                ? DarkAppColors.error500
-                : AppColors.error500,
+            color: isDark ? DarkAppColors.error500 : AppColors.error500,
           ),
           const SizedBox(width: 8),
           Text(
             'Log Out',
             style: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isDark
-                  ? DarkAppColors.error500
-                  : AppColors.error500,
+              color: isDark ? DarkAppColors.error500 : AppColors.error500,
             ),
           ),
         ],
@@ -396,9 +367,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         style: theme.textTheme.bodySmall?.copyWith(
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: isDark
-              ? DarkAppColors.neutral500
-              : AppColors.neutral400,
+          color: isDark ? DarkAppColors.neutral500 : AppColors.neutral400,
         ),
       ),
     );
@@ -423,16 +392,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     // Verify biometrics work before enabling
                     final biometricService = ref.read(biometricServiceProvider);
                     final result = await biometricService.authenticate(
-                      localizedReason: 'Verify your identity to enable biometric unlock',
+                      localizedReason:
+                          'Verify your identity to enable biometric unlock',
                     );
                     if (result == BiometricAuthResult.success) {
-                      ref.read(biometricEnabledProvider.notifier).setEnabled(true);
+                      ref
+                          .read(biometricEnabledProvider.notifier)
+                          .setEnabled(true);
                     } else {
                       // Show error message
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('Biometric verification failed'),
+                            content: const Text(
+                              'Biometric verification failed',
+                            ),
                             backgroundColor: isDark
                                 ? DarkAppColors.error500
                                 : AppColors.error500,
@@ -441,7 +415,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       }
                     }
                   } else {
-                    ref.read(biometricEnabledProvider.notifier).setEnabled(false);
+                    ref
+                        .read(biometricEnabledProvider.notifier)
+                        .setEnabled(false);
                   }
                 }
               : (_) {}, // No-op when not available
@@ -542,7 +518,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       child: InkWell(
         onTap: () async {
           await ref.read(themeNotifierProvider.notifier).setThemeMode(mode);
-          if (mounted) {
+          if (context.mounted) {
             Navigator.of(context).pop();
           }
         },
@@ -552,16 +528,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           decoration: BoxDecoration(
             color: isSelected
                 ? (isDark
-                    ? DarkAppColors.surfaceElevated2
-                    : AppColors.primary50)
+                      ? DarkAppColors.surfaceElevated2
+                      : AppColors.primary50)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
                   ? theme.colorScheme.primary
-                  : (isDark
-                      ? DarkAppColors.neutral700
-                      : AppColors.neutral200),
+                  : (isDark ? DarkAppColors.neutral700 : AppColors.neutral200),
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -571,13 +545,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 child: Text(
                   label,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                     color: isSelected
                         ? theme.colorScheme.primary
                         : (isDark
-                            ? DarkAppColors.textPrimary
-                            : AppColors.textPrimary),
+                              ? DarkAppColors.textPrimary
+                              : AppColors.textPrimary),
                   ),
                 ),
               ),

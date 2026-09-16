@@ -29,10 +29,7 @@ class MfaChallengePageParams {
 class MfaChallengePage extends ConsumerStatefulWidget {
   final MfaChallengePageParams? params;
 
-  const MfaChallengePage({
-    super.key,
-    this.params,
-  });
+  const MfaChallengePage({super.key, this.params});
 
   @override
   ConsumerState<MfaChallengePage> createState() => _MfaChallengePageState();
@@ -46,7 +43,6 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
   int _resendCountdown = 24;
   Timer? _timer;
   bool _hasError = false;
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -91,18 +87,6 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
     return widget.params?.phoneNumber ?? '***-***-1234';
   }
 
-  Future<void> _handleBiometricAuth() async {
-    setState(() => _isLoading = true);
-
-    // Simulate biometric auth
-    await Future.delayed(const Duration(seconds: 1));
-
-    if (mounted) {
-      setState(() => _isLoading = false);
-      // Navigate on success
-    }
-  }
-
   Future<void> _handlePinVerify() async {
     if (_pinCode.length != 6) {
       setState(() => _hasError = true);
@@ -136,23 +120,18 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
     }
 
     if (mfaToken == null) {
-      setState(() {
-        _hasError = true;
-        _errorMessage = 'MFA session expired. Please login again.';
-      });
+      setState(() => _hasError = true);
       return;
     }
 
     setState(() {
       _isLoading = true;
       _hasError = false;
-      _errorMessage = null;
     });
 
-    await ref.read(authNotifierProvider.notifier).verifyMfa(
-          mfaToken: mfaToken,
-          code: _otpCode,
-        );
+    await ref
+        .read(authNotifierProvider.notifier)
+        .verifyMfa(mfaToken: mfaToken, code: _otpCode);
   }
 
   @override
@@ -165,7 +144,6 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = next.message;
         });
       } else if (next is AuthLoading) {
         setState(() => _isLoading = true);
@@ -286,10 +264,7 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
         ),
         const SizedBox(height: AppSpacing.spacing4),
         // Cancel button
-        AppSecondaryButton(
-          text: 'Cancel',
-          onPressed: () => context.pop(),
-        ),
+        AppSecondaryButton(text: 'Cancel', onPressed: () => context.pop()),
         const SizedBox(height: AppSpacing.spacing4),
       ],
     );
@@ -324,8 +299,8 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
                 color: isFilled
                     ? theme.colorScheme.primary
                     : (isDark
-                        ? DarkAppColors.borderDefault
-                        : AppColors.neutral300),
+                          ? DarkAppColors.borderDefault
+                          : AppColors.neutral300),
               ),
             );
           }),
@@ -356,7 +331,9 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
           },
           onDelete: () {
             if (_pinCode.isNotEmpty) {
-              setState(() => _pinCode = _pinCode.substring(0, _pinCode.length - 1));
+              setState(
+                () => _pinCode = _pinCode.substring(0, _pinCode.length - 1),
+              );
             }
           },
           onBiometric: () => _switchMethod(MfaMethod.biometric),
@@ -375,10 +352,7 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
         // Back button
         Align(
           alignment: Alignment.centerLeft,
-          child: AppBackButton(
-            label: null,
-            onPressed: () => context.pop(),
-          ),
+          child: AppBackButton(label: null, onPressed: () => context.pop()),
         ),
         const SizedBox(height: AppSpacing.spacing4),
         // Title
@@ -406,7 +380,9 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
               Text(
                 _maskedPhone,
                 style: AppTypography.bodyMd.copyWith(
-                  color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                  color: isDark
+                      ? DarkAppColors.textPrimary
+                      : AppColors.textPrimary,
                   fontWeight: AppTypography.weightMedium,
                 ),
               ),
@@ -447,7 +423,9 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
                 style: AppTypography.labelMd.copyWith(
                   color: _resendCountdown <= 0
                       ? theme.colorScheme.primary
-                      : (isDark ? DarkAppColors.textMuted : AppColors.textMuted),
+                      : (isDark
+                            ? DarkAppColors.textMuted
+                            : AppColors.textMuted),
                 ),
               ),
             ),
@@ -483,7 +461,9 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
   }) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final bgColor = isDark ? DarkAppColors.surfaceElevated1 : AppColors.neutral100;
+    final bgColor = isDark
+        ? DarkAppColors.surfaceElevated1
+        : AppColors.neutral100;
 
     Widget buildKey(String label, {VoidCallback? onTap, Widget? icon}) {
       return Expanded(
@@ -497,7 +477,8 @@ class _MfaChallengePageState extends ConsumerState<MfaChallengePage> {
               borderRadius: AppBorderRadius.md,
             ),
             child: Center(
-              child: icon ??
+              child:
+                  icon ??
                   Text(
                     label,
                     style: AppTypography.h3.copyWith(

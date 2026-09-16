@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../config/theme/theme.dart';
 import '../../atoms/atoms.dart';
-import '../../molecules/molecules.dart';
 import '../../../../../application/subscription/state/checkout_notifier.dart';
 import '../../../../../application/subscription/state/payment_methods_notifier.dart';
 
@@ -35,15 +34,15 @@ class _PaymentMethodSelectionPageState
     // Check if there's already a selected payment method from checkout state
     final checkoutState = ref.read(checkoutProvider);
     checkoutState.when(
-      paymentMethodSelected: (_, __, ___, paymentMethod, ____, _____) {
+      paymentMethodSelected: (_, _, _, paymentMethod, _, _) {
         selectedPaymentMethodId = paymentMethod.id;
         isCashSelected = false;
       },
-      cashPaymentSelected: (_, __, ___, ____, _____) {
+      cashPaymentSelected: (_, _, _, _, _) {
         isCashSelected = true;
         selectedPaymentMethodId = null;
       },
-      planSelected: (_, __, ___, ____, _____) {},
+      planSelected: (_, _, _, _, _) {},
       initial: () {},
       loading: () {},
       processing: () {},
@@ -59,8 +58,9 @@ class _PaymentMethodSelectionPageState
     final paymentMethodsAsync = ref.watch(paymentMethodsProvider);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? DarkAppColors.backgroundPrimary : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? DarkAppColors.backgroundPrimary
+          : AppColors.backgroundPrimary,
       appBar: _buildAppBar(context, isDark),
       body: paymentMethodsAsync.when(
         data: (methods) => _buildContent(context, isDark, methods),
@@ -72,13 +72,12 @@ class _PaymentMethodSelectionPageState
 
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isDark) {
     return AppBar(
-      backgroundColor:
-          isDark ? DarkAppColors.backgroundPrimary : AppColors.backgroundPrimary,
+      backgroundColor: isDark
+          ? DarkAppColors.backgroundPrimary
+          : AppColors.backgroundPrimary,
       elevation: 0,
       centerTitle: true,
-      leading: AppBackButton(
-        onPressed: () => context.pop(),
-      ),
+      leading: AppBackButton(onPressed: () => context.pop()),
       title: Text(
         'Select Payment Method',
         style: AppTypography.h5.copyWith(
@@ -127,17 +126,15 @@ class _PaymentMethodSelectionPageState
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.info_outline,
-            color: AppColors.primary500,
-            size: 24,
-          ),
+          Icon(Icons.info_outline, color: AppColors.primary500, size: 24),
           SizedBox(width: AppSpacing.spacing3),
           Expanded(
             child: Text(
               'Choose how you\'d like to pay for your gym subscription',
               style: AppTypography.bodySm.copyWith(
-                color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                color: isDark
+                    ? DarkAppColors.textPrimary
+                    : AppColors.textPrimary,
               ),
             ),
           ),
@@ -156,7 +153,9 @@ class _PaymentMethodSelectionPageState
             Text(
               'Payment Options',
               style: AppTypography.h6.copyWith(
-                color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                color: isDark
+                    ? DarkAppColors.textPrimary
+                    : AppColors.textPrimary,
               ),
             ),
             if (paymentMethods.isNotEmpty)
@@ -183,7 +182,9 @@ class _PaymentMethodSelectionPageState
                 icon: const Icon(Icons.add, size: 18),
                 label: Text(
                   'Add New Card',
-                  style: AppTypography.labelSm.copyWith(color: AppColors.primary500),
+                  style: AppTypography.labelSm.copyWith(
+                    color: AppColors.primary500,
+                  ),
                 ),
               ),
           ],
@@ -200,28 +201,36 @@ class _PaymentMethodSelectionPageState
               children: [
                 Expanded(
                   child: Divider(
-                    color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+                    color: isDark
+                        ? DarkAppColors.borderDefault
+                        : AppColors.borderDefault,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.spacing3),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.spacing3,
+                  ),
                   child: Text(
                     'OR PAY WITH CARD',
                     style: AppTypography.labelSm.copyWith(
-                      color: isDark ? DarkAppColors.textMuted : AppColors.textMuted,
+                      color: isDark
+                          ? DarkAppColors.textMuted
+                          : AppColors.textMuted,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 Expanded(
                   child: Divider(
-                    color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+                    color: isDark
+                        ? DarkAppColors.borderDefault
+                        : AppColors.borderDefault,
                   ),
                 ),
               ],
             ),
           ),
-          ...paymentMethods.map((method) => _buildCardOption(isDark, method)).toList(),
+          ...paymentMethods.map((method) => _buildCardOption(isDark, method)),
         ],
 
         if (paymentMethods.isEmpty) ...[
@@ -250,7 +259,9 @@ class _PaymentMethodSelectionPageState
           border: Border.all(
             color: isCashSelected
                 ? AppColors.primary500
-                : (isDark ? DarkAppColors.borderDefault : AppColors.borderDefault),
+                : (isDark
+                      ? DarkAppColors.borderDefault
+                      : AppColors.borderDefault),
             width: isCashSelected ? 2 : 1,
           ),
         ),
@@ -270,7 +281,9 @@ class _PaymentMethodSelectionPageState
               decoration: BoxDecoration(
                 color: isCashSelected
                     ? AppColors.primary500.withValues(alpha: 0.1)
-                    : (isDark ? DarkAppColors.surfaceElevated2 : AppColors.backgroundSecondary),
+                    : (isDark
+                          ? DarkAppColors.surfaceElevated2
+                          : AppColors.backgroundSecondary),
                 borderRadius: AppBorderRadius.md,
               ),
               child: Icon(
@@ -278,7 +291,9 @@ class _PaymentMethodSelectionPageState
                 size: 28,
                 color: isCashSelected
                     ? AppColors.primary500
-                    : (isDark ? DarkAppColors.textPrimary : AppColors.textPrimary),
+                    : (isDark
+                          ? DarkAppColors.textPrimary
+                          : AppColors.textPrimary),
               ),
             ),
             SizedBox(width: AppSpacing.spacing3),
@@ -289,7 +304,9 @@ class _PaymentMethodSelectionPageState
                   Text(
                     'Pay with Cash',
                     style: AppTypography.bodyMd.copyWith(
-                      color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                      color: isDark
+                          ? DarkAppColors.textPrimary
+                          : AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -297,7 +314,9 @@ class _PaymentMethodSelectionPageState
                   Text(
                     'Pay at the gym. Subscription activates after staff confirmation.',
                     style: AppTypography.bodySm.copyWith(
-                      color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                      color: isDark
+                          ? DarkAppColors.textSecondary
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -330,7 +349,9 @@ class _PaymentMethodSelectionPageState
           border: Border.all(
             color: isSelected
                 ? AppColors.primary500
-                : (isDark ? DarkAppColors.borderDefault : AppColors.borderDefault),
+                : (isDark
+                      ? DarkAppColors.borderDefault
+                      : AppColors.borderDefault),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -350,7 +371,9 @@ class _PaymentMethodSelectionPageState
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.primary500.withValues(alpha: 0.1)
-                    : (isDark ? DarkAppColors.surfaceElevated2 : AppColors.backgroundSecondary),
+                    : (isDark
+                          ? DarkAppColors.surfaceElevated2
+                          : AppColors.backgroundSecondary),
                 borderRadius: AppBorderRadius.md,
               ),
               child: Icon(
@@ -358,7 +381,9 @@ class _PaymentMethodSelectionPageState
                 size: 28,
                 color: isSelected
                     ? AppColors.primary500
-                    : (isDark ? DarkAppColors.textPrimary : AppColors.textPrimary),
+                    : (isDark
+                          ? DarkAppColors.textPrimary
+                          : AppColors.textPrimary),
               ),
             ),
             SizedBox(width: AppSpacing.spacing3),
@@ -369,14 +394,18 @@ class _PaymentMethodSelectionPageState
                   Text(
                     method.displayLabel,
                     style: AppTypography.bodyMd.copyWith(
-                      color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                      color: isDark
+                          ? DarkAppColors.textPrimary
+                          : AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     'Expires ${method.expiryDate}',
                     style: AppTypography.bodySm.copyWith(
-                      color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                      color: isDark
+                          ? DarkAppColors.textSecondary
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -410,7 +439,9 @@ class _PaymentMethodSelectionPageState
     return Container(
       padding: EdgeInsets.all(AppSpacing.spacing5),
       decoration: BoxDecoration(
-        color: isDark ? DarkAppColors.surfaceElevated1 : AppColors.backgroundSecondary,
+        color: isDark
+            ? DarkAppColors.surfaceElevated1
+            : AppColors.backgroundSecondary,
         borderRadius: AppBorderRadius.lg,
         border: Border.all(
           color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
@@ -418,7 +449,11 @@ class _PaymentMethodSelectionPageState
       ),
       child: Column(
         children: [
-          Icon(Icons.credit_card_outlined, size: 56, color: AppColors.textMuted),
+          Icon(
+            Icons.credit_card_outlined,
+            size: 56,
+            color: AppColors.textMuted,
+          ),
           SizedBox(height: AppSpacing.spacing3),
           Text(
             'No saved cards',
@@ -431,7 +466,9 @@ class _PaymentMethodSelectionPageState
             'Add a payment card to pay online',
             textAlign: TextAlign.center,
             style: AppTypography.bodySm.copyWith(
-              color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+              color: isDark
+                  ? DarkAppColors.textSecondary
+                  : AppColors.textSecondary,
             ),
           ),
           SizedBox(height: AppSpacing.spacing4),
@@ -475,7 +512,9 @@ class _PaymentMethodSelectionPageState
             Text(
               'Error Loading Payment Methods',
               style: AppTypography.h5.copyWith(
-                color: isDark ? DarkAppColors.textPrimary : AppColors.textPrimary,
+                color: isDark
+                    ? DarkAppColors.textPrimary
+                    : AppColors.textPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.spacing2),
@@ -483,7 +522,9 @@ class _PaymentMethodSelectionPageState
               error,
               textAlign: TextAlign.center,
               style: AppTypography.bodySm.copyWith(
-                color: isDark ? DarkAppColors.textSecondary : AppColors.textSecondary,
+                color: isDark
+                    ? DarkAppColors.textSecondary
+                    : AppColors.textSecondary,
               ),
             ),
             SizedBox(height: AppSpacing.spacing4),
@@ -505,10 +546,14 @@ class _PaymentMethodSelectionPageState
       right: 0,
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? DarkAppColors.backgroundPrimary : AppColors.backgroundPrimary,
+          color: isDark
+              ? DarkAppColors.backgroundPrimary
+              : AppColors.backgroundPrimary,
           border: Border(
             top: BorderSide(
-              color: isDark ? DarkAppColors.borderDefault : AppColors.borderDefault,
+              color: isDark
+                  ? DarkAppColors.borderDefault
+                  : AppColors.borderDefault,
               width: 1,
             ),
           ),
@@ -541,8 +586,12 @@ class _PaymentMethodSelectionPageState
     } else if (selectedPaymentMethodId != null) {
       // Get the selected payment method and update checkout state
       final paymentMethodsAsync = ref.read(paymentMethodsProvider);
-      final matches = paymentMethodsAsync.value?.where((m) => m.id == selectedPaymentMethodId);
-      final paymentMethod = matches != null && matches.isNotEmpty ? matches.first : null;
+      final matches = paymentMethodsAsync.value?.where(
+        (m) => m.id == selectedPaymentMethodId,
+      );
+      final paymentMethod = matches != null && matches.isNotEmpty
+          ? matches.first
+          : null;
 
       if (paymentMethod != null) {
         ref.read(checkoutProvider.notifier).selectPaymentMethod(paymentMethod);
